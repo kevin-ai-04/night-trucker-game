@@ -1,0 +1,149 @@
+# main.gd
+extends Node2D
+
+@onready var world = $World
+@onready var road1 = $World/Road1
+@onready var road2 = $World/Road2
+@onready var player = $World/Player
+@onready var obstacle_scene = preload("res://obstacle.tscn")
+@onready var obstacle_timer = $ObstacleTimer
+@onready var sfx_beep = $SfxBeep
+@onready var sfx_score = $SfxScore
+@onready var hud = $HUD
+@onready var retry_button = $HUD/RetryButton
+
+@onready var grass1 = $BackgroundLayer/Grass1
+@onready var grass2 = $BackgroundLayer/Grass2
+
+var active_obstacles = []
+var is_game_active = false
+var score = 0
+var beep_cooldown = 0.0
+var road_speed = 500
+
+const STAGGER_DISTANCE = 1200
+const MAX_CONSECUTIVE_LANE = 3
+var last_safe_lane = -1
+var same_lane_count = 0
+
+func _ready():
+	player.hit.connect(_on_player_hit)
+	obstacle_timer.timeout.connect(_on_obstacle_timer_timeout)
+	retry_button.pressed.connect(new_game)
+	new_game()
+
+func new_game():
+	score = 0
+	is_game_active = false
+	
+	for obs in active_obstacles:
+		obs.queue_free()
+	active_obstacles.clear()
+	
+	obstacle_timer.stop()
+
+	hud.get_node("ScoreLabel").text = "Score: " + str(score)
+	hud.get_node("MessageLabel").text = "Press Space/Enter to Start"
+	hud.get_node("MessageLabel").show()
+	retry_button.hide()
+	
+func _unhandled_input(event):
+	if event.is_action_pressed("start_game") and not is_game_active:
+		is_game_active = true
+		score = 0
+		hud.get_node("MessageLabel").hide()
+		hud.get_node("ScoreLabel").text = "Score: " + str(score)
+		obstacle_timer.start()
+
+func _on_player_hit():
+	is_game_active = false
+	obstacle_timer.stop()
+	hud.get_node("MessageLabel").text = "Game Over"
+	hud.get_node("MessageLabel").show()
+	retry_button.show()
+
+func _on_obstacle_timer_timeout():
+	var safe_lane = randi() % 3
+	if safe_lane == last_safe_lane:
+		same_lane_count += 1
+	else:
+		same_lane_count = 1
+	if same_lane_count >= MAX_CONSECUTIVE_LANE:
+		var new_safe_lane = safe_lane
+		while new_safe_lane == last_safe_lane:
+			new_safe_lane = randi() % 3
+		safe_lane = new_safe_lane
+		same_lane_count = 1
+	last_safe_lane = safe_lane
+
+	var screen_center_x = 360
+	var lane_width = player.LANE_WIDTH
+	var staggered = false
+	for lane_index in range(3):
+		if lane_index != safe_lane:
+			var new_obstacle = obstacle_scene.instantiate()
+			new_obstacle.position.x = screen_center_x + (lane_index - 1) * lane_width
+			if not staggered:
+				new_obstacle.position.y = -50
+				staggered = true
+			else:
+				new_obstacle.position.y = -50 - STAGGER_DISTANCE
+			world.add_child(new_obstacle) # Add obstacle to the world
+			active_obstacles.append(new_obstacle)
+			new_obstacle.tree_exiting.connect(func(): active_obstacles.erase(new_obstacle))
+
+func _process(delta):
+	# Keep the World node centered
+	world.position.x = (get_viewport_rect().size.x - 720) / 2
+	world.position.y = (get_viewport_rect().size.y - 1280) / 2
+
+	# --- Road Scrolling ---
+	road1.position.y += road_speed * delta
+	road2.position.y += road_speed * delta
+	var road_height = 1280
+	if road1.position.y > 1280 + (road_height / 2):
+		road1.position.y = road2.position.y - road_height
+	if road2.position.y > 1280 + (road_height / 2):
+		road2.position.y = road1.position.y - road_height
+	
+	# --- Grass Scrolling Logic ---
+	# Move both grass textures down
+	grass1.position.y += road_speed * delta
+	grass2.position.y += road_speed * delta
+
+	# Check if a grass texture has moved off the bottom of the screen
+	var screen_height = 1280
+
+	if grass1.position.y > screen_height:
+		# Move it back to the top, above the other texture
+		grass1.position.y = grass2.position.y - screen_height
+		
+	if grass2.position.y > screen_height:
+		# Move it back to the top, above the other texture
+		grass2.position.y = grass1.position.y - screen_height
+	
+	if not is_game_active:
+		return
+
+	# --- Radar Beep Logic ---
+	beep_cooldown -= delta
+	var closest_distance = 10000
+	var obstacle_in_lane = false
+	for obs in active_obstacles:
+		if abs(obs.position.x - player.position.x) < 20:
+			var distance = player.position.y - obs.position.y
+			if distance > 0 and distance < closest_distance:
+				closest_distance = distance
+				obstacle_in_lane = true
+	if obstacle_in_lane:
+		if beep_cooldown <= 0:
+			sfx_beep.play()
+			var beep_interval = remap(closest_distance, 100, 800, 0.1, 1.0)
+			beep_cooldown = clamp(beep_interval, 0.1, 1.0)
+
+func _on_ScoreArea_area_entered(area):
+	if area.is_in_group("obstacles") and not area.scored:
+		area.scored = true
+		score += 1
+		hud.get_node("ScoreLabel").text = "Score: " + str(score)
+		sfx_score.play()

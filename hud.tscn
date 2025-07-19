@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://2bd6qqtqcbey"]
+
+[node name="HUD" type="CanvasLayer"]
+
+[node name="ScoreLabel" type="Label" parent="."]
+offset_left = 122.0
+offset_top = 39.0
+offset_right = 209.0
+offset_bottom = 82.0
+text = "Score: 0"
+
+[node name="MessageLabel" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -43.5
+offset_top = -11.5
+offset_right = 43.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Game Over"
+
+[node name="RetryButton" type="Button" parent="."]
+anchors_preset = -1
+anchor_left = 0.497
+anchor_top = 0.552
+anchor_right = 0.497
+anchor_bottom = 0.552
+offset_left = -24.84
+offset_top = -15.5601
+offset_right = 25.16
+offset_bottom = 15.4399
+grow_horizontal = 2
+grow_vertical = 2
+text = "Retry"
