@@ -7,22 +7,22 @@
 [ext_resource type="AudioStream" uid="uid://b2b75tdm4o6f0" path="res://assets/right_lane_Kendra.mp3" id="5_b26j0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n7ghd"]
-size = Vector2(89, 118)
+size = Vector2(89, 82)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 10
 script = ExtResource("1_sweqy")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(1, 1)
-scale = Vector2(0.522523, 0.522523)
+position = Vector2(-0.499997, -31.6622)
+scale = Vector2(0.445946, 0.390554)
 texture = ExtResource("2_sweqy")
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(-0.5, -21)
+position = Vector2(-0.5, -39)
 shape = SubResource("RectangleShape2D_n7ghd")
 
 [node name="SfxLeft" type="AudioStreamPlayer" parent="."]

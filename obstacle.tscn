@@ -23,4 +23,5 @@ shape = SubResource("RectangleShape2D_vcivv")
 [node name="SfxPassBy" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 stream = ExtResource("3_vcivv")
-volume_db = -15.656
+volume_db = -20.0
+bus = &"SFX"

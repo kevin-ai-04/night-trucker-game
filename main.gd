@@ -16,7 +16,10 @@ extends Node2D
 @onready var grass1 = $BackgroundLayer/Grass1
 @onready var grass2 = $BackgroundLayer/Grass2
 
+@onready var bgm_player = $BGMPlayer
+var current_bgm_index = -1
 
+@onready var engine_sound_player = $EngineSoundPlayer
 
 var active_obstacles = []
 var is_game_active = false
@@ -24,16 +27,30 @@ var score = 0
 var beep_cooldown = 0.0
 var road_speed = 500
 
-const STAGGER_DISTANCE = 1200
+const STAGGER_DISTANCE = 2200
 const MAX_CONSECUTIVE_LANE = 3
 var last_safe_lane = -1
 var same_lane_count = 0
+
+
+# Create an array of your music tracks
+var bgm_tracks = [
+	preload("res://assets/Music/going-up-chill-lofi-jazz-341261.mp3"),
+	preload("res://assets/Music/we-jazz-lofi-soul-363084.mp3"),
+	preload("res://assets/Music/sloth-tier-lofi-jazz-223593.mp3"),
+	preload("res://assets/Music/warm-breeze-lofi-music-chill-lofi-344259.mp3"),
+	preload("res://assets/Music/we-jazz-lofi-soul-363084.mp3")
+]
+
 
 func _ready():
 	player.hit.connect(_on_player_hit)
 	obstacle_timer.timeout.connect(_on_obstacle_timer_timeout)
 	retry_button.pressed.connect(new_game)
 	new_game()
+	bgm_player.finished.connect(_on_bgm_finished)
+	engine_sound_player.finished.connect(engine_sound_player.play)
+	_play_next_song()
 
 func new_game():
 	get_tree().paused = false
@@ -50,6 +67,7 @@ func new_game():
 	hud.get_node("MessageLabel").text = "Press Space/Enter to Start"
 	hud.get_node("MessageLabel").show()
 	retry_button.hide()
+	engine_sound_player.stop()
 	
 func _unhandled_input(event):
 	if event.is_action_pressed("start_game") and not is_game_active:
@@ -59,11 +77,13 @@ func _unhandled_input(event):
 		hud.get_node("MessageLabel").hide()
 		hud.get_node("ScoreLabel").text = "Score: " + str(score)
 		obstacle_timer.start()
+		engine_sound_player.play()
 
 func _on_player_hit():
 	sfx_crash.play() # Add this line
 	is_game_active = false
 	obstacle_timer.stop()
+	engine_sound_player.stop()
 	hud.get_node("MessageLabel").text = "Game Over"
 	hud.get_node("MessageLabel").show()
 	retry_button.show()
@@ -147,8 +167,8 @@ func _process(delta):
 	if obstacle_in_lane:
 		if beep_cooldown <= 0:
 			sfx_beep.play()
-			var beep_interval = remap(closest_distance, 100, 800, 0.1, 1.0)
-			beep_cooldown = clamp(beep_interval, 0.1, 1.0)
+			var beep_interval = remap(closest_distance, 200, 800, 0.1, 1.0)
+			beep_cooldown = clamp(beep_interval, 0.05, 1.2)
 
 func _on_ScoreArea_area_entered(area):
 	if area.is_in_group("obstacles") and not area.scored:
@@ -156,3 +176,15 @@ func _on_ScoreArea_area_entered(area):
 		score += 1
 		hud.get_node("ScoreLabel").text = "Score: " + str(score)
 		sfx_score.play()
+
+func _on_bgm_finished():
+	_play_next_song()
+
+func _play_next_song():
+	current_bgm_index += 1
+	# If we've gone past the end of the list, loop back to the start
+	if current_bgm_index >= bgm_tracks.size():
+		current_bgm_index = 0
+	
+	bgm_player.stream = bgm_tracks[current_bgm_index]
+	bgm_player.play()

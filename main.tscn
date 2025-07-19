@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dpvuren1glkcn"]
+[gd_scene load_steps=11 format=3 uid="uid://dpvuren1glkcn"]
 
 [ext_resource type="Script" uid="uid://b4nowckmhibsh" path="res://main.gd" id="1_h2yge"]
 [ext_resource type="PackedScene" uid="uid://voiroqlgikpj" path="res://player.tscn" id="2_1bvp3"]
@@ -8,6 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://daulvtk8tjgmc" path="res://assets/blip-131856-point.mp3" id="5_lquwl"]
 [ext_resource type="Texture2D" uid="uid://cxmay3trh2bqt" path="res://assets/grass_tile.png" id="6_7mycd"]
 [ext_resource type="AudioStream" uid="uid://bbocsu45g0if" path="res://assets/crash.mp3" id="8_5vw27"]
+[ext_resource type="AudioStream" uid="uid://dtd2ksj3bemog" path="res://assets/rumbling_semi_truck.mp3" id="9_kek77"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1bvp3"]
 size = Vector2(720, 116)
@@ -68,9 +69,11 @@ process_mode = 3
 stream = ExtResource("3_lquwl")
 volume_db = -12.11
 pitch_scale = 0.7
+bus = &"SFX"
 
 [node name="SfxScore" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_lquwl")
+bus = &"SFX"
 
 [node name="ObstacleTimer" type="Timer" parent="."]
 wait_time = 5.0
@@ -80,5 +83,16 @@ process_mode = 3
 stream = ExtResource("8_5vw27")
 volume_db = -10.065
 pitch_scale = 0.61
+bus = &"SFX"
+
+[node name="BGMPlayer" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+volume_db = -25.0
+bus = &"Music"
+
+[node name="EngineSoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_kek77")
+volume_db = -27.0
+bus = &"Engine"
 
 [connection signal="area_entered" from="World/ScoreArea" to="." method="_on_ScoreArea_area_entered"]
