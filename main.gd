@@ -9,11 +9,14 @@ extends Node2D
 @onready var obstacle_timer = $ObstacleTimer
 @onready var sfx_beep = $SfxBeep
 @onready var sfx_score = $SfxScore
+@onready var sfx_crash = $SfxCrash
 @onready var hud = $HUD
 @onready var retry_button = $HUD/RetryButton
 
 @onready var grass1 = $BackgroundLayer/Grass1
 @onready var grass2 = $BackgroundLayer/Grass2
+
+
 
 var active_obstacles = []
 var is_game_active = false
@@ -33,6 +36,7 @@ func _ready():
 	new_game()
 
 func new_game():
+	get_tree().paused = false
 	score = 0
 	is_game_active = false
 	
@@ -49,6 +53,7 @@ func new_game():
 	
 func _unhandled_input(event):
 	if event.is_action_pressed("start_game") and not is_game_active:
+		get_tree().paused = false # Add this line
 		is_game_active = true
 		score = 0
 		hud.get_node("MessageLabel").hide()
@@ -56,11 +61,14 @@ func _unhandled_input(event):
 		obstacle_timer.start()
 
 func _on_player_hit():
+	sfx_crash.play() # Add this line
 	is_game_active = false
 	obstacle_timer.stop()
 	hud.get_node("MessageLabel").text = "Game Over"
 	hud.get_node("MessageLabel").show()
 	retry_button.show()
+	
+	get_tree().paused = true 
 
 func _on_obstacle_timer_timeout():
 	var safe_lane = randi() % 3
@@ -82,6 +90,7 @@ func _on_obstacle_timer_timeout():
 	for lane_index in range(3):
 		if lane_index != safe_lane:
 			var new_obstacle = obstacle_scene.instantiate()
+			new_obstacle.player_node = player
 			new_obstacle.position.x = screen_center_x + (lane_index - 1) * lane_width
 			if not staggered:
 				new_obstacle.position.y = -50

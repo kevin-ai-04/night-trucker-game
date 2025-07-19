@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dnftl03kqh4s7"]
+[gd_scene load_steps=5 format=3 uid="uid://dnftl03kqh4s7"]
 
 [ext_resource type="Script" uid="uid://ccng4et35uxx6" path="res://obstacle.gd" id="1_sl1jc"]
 [ext_resource type="Texture2D" uid="uid://fwg6yo5qj2jl" path="res://icon.svg" id="2_aubd6"]
+[ext_resource type="AudioStream" uid="uid://cddfyd3r5l61f" path="res://assets/car-passing-2.ogg" id="3_vcivv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vcivv"]
 size = Vector2(98, 101)
@@ -12,8 +13,14 @@ collision_mask = 0
 script = ExtResource("1_sl1jc")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.2, 0.2)
 texture = ExtResource("2_aubd6")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1, -0.5)
 shape = SubResource("RectangleShape2D_vcivv")
+
+[node name="SfxPassBy" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("3_vcivv")
+volume_db = -15.656

@@ -1,25 +1,28 @@
 [gd_scene load_steps=7 format=3 uid="uid://voiroqlgikpj"]
 
 [ext_resource type="Script" uid="uid://b4u3yrsjkkbth" path="res://player.gd" id="1_sweqy"]
-[ext_resource type="Texture2D" uid="uid://fwg6yo5qj2jl" path="res://icon.svg" id="2_2hs0m"]
+[ext_resource type="Texture2D" uid="uid://ciwgdaph2gwx0" path="res://assets/truck.png" id="2_sweqy"]
 [ext_resource type="AudioStream" uid="uid://dwt8fqrkk32tk" path="res://assets/left_lane_Kendra.mp3" id="3_1jxqw"]
 [ext_resource type="AudioStream" uid="uid://c13t4a0pbsoar" path="res://assets/middle_lane_Kendra.mp3" id="4_dw050"]
 [ext_resource type="AudioStream" uid="uid://b2b75tdm4o6f0" path="res://assets/right_lane_Kendra.mp3" id="5_b26j0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n7ghd"]
-size = Vector2(95, 57)
+size = Vector2(89, 118)
 
 [node name="Player" type="CharacterBody2D"]
+z_index = 10
 script = ExtResource("1_sweqy")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_2hs0m")
+position = Vector2(1, 1)
+scale = Vector2(0.522523, 0.522523)
+texture = ExtResource("2_sweqy")
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(-1.5, -19.5)
+position = Vector2(-0.5, -21)
 shape = SubResource("RectangleShape2D_n7ghd")
 
 [node name="SfxLeft" type="AudioStreamPlayer" parent="."]
