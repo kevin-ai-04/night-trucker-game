@@ -101,7 +101,7 @@ func _on_player_hit():
 	hud.get_node("MessageLabel").show()
 
 func _on_obstacle_timer_timeout():
-	obstacle_timer.wait_time = 10.0
+	obstacle_timer.wait_time = 12.0
 	var safe_lane = randi() % 3
 	if safe_lane == last_safe_lane:
 		same_lane_count += 1

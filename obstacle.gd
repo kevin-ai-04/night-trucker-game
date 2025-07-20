@@ -3,7 +3,7 @@ extends Area2D
 
 # How fast the obstacle moves down the screen.
 # We will set this from the main script later.
-var speed = 100 
+var speed = 200 
 var scored = false
 
 var is_stopped = false
