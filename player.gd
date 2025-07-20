@@ -86,3 +86,10 @@ func _physics_process(delta):
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	# When any area (like an obstacle) enters our hitbox, we emit the "hit" signal.
 	emit_signal("hit")
+
+
+func reset():
+	# Reset lane and position to the starting state
+	current_lane = 1
+	var screen_center_x = 360.0
+	position.x = screen_center_x

@@ -48,4 +48,6 @@ offset_right = -20.0
 offset_bottom = -15.0
 grow_horizontal = 0
 grow_vertical = 0
-text = "v25.07.20.02"
+theme_override_fonts/font = ExtResource("1_37p78")
+theme_override_font_sizes/font_size = 11
+text = "v25.07.20.04"

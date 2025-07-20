@@ -6,6 +6,8 @@ extends Area2D
 var speed = 100 
 var scored = false
 
+var is_stopped = false
+
 # Add this array at the top of obstacle.gd
 var car_textures = [
 	preload("res://assets//car1.png"),
@@ -29,6 +31,8 @@ func _ready():
 	sprite.texture = car_textures.pick_random()
 
 func _process(delta):
+	if is_stopped:
+		return
 	# Move the obstacle downwards every frame.
 	position.y += speed * delta
 	

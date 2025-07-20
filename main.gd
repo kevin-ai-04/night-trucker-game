@@ -51,49 +51,54 @@ func new_game():
 	get_tree().paused = false
 	score = 0
 	is_game_active = false
-	
+
 	for obs in active_obstacles:
 		obs.queue_free()
 	active_obstacles.clear()
-	
-	obstacle_timer.stop()
 
-	hud.get_node("ScoreLabel").text = "Score: " + str(score)
-	hud.get_node("MessageLabel").text = "Press to Start"
-	hud.get_node("MessageLabel").show()
+	obstacle_timer.stop()
 	engine_sound_player.stop()
-	
+
+	# Reset positions
+	player.reset()
+	road1.position = Vector2(360, 640)
+	road2.position = Vector2(360, -640)
+	grass1.position = Vector2(0, 0)
+	grass2.position = Vector2(0, -1280)
+
+	# Update UI for the menu screen
+	hud.get_node("ScoreLabel").text = "Score: " + str(score)
+	hud.get_node("MessageLabel").text = "Tap to Start"
+	hud.get_node("MessageLabel").show()
+
 func _unhandled_input(event):
 	# Only check for input if the game is not active
 	if not is_game_active:
-		# Check for keyboard start OR a screen tap/mouse click
-		var keyboard_start = event.is_action_pressed("start_game")
-		var screen_tap_start = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
+		var start_command = event.is_action_pressed("start_game")
+		var screen_tap = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
 
-		if keyboard_start or screen_tap_start:
-			# Call new_game() to reset score, clear old obstacles, etc.
+		if start_command or screen_tap:
+			# When the player taps, reset everything...
 			new_game()
 
-			# Now, immediately start the new game
-			get_tree().paused = false
+			# ...and then immediately start the game
 			is_game_active = true
-			
-			# Update UI for game start (this hides the "Tap to Start" message)
 			hud.get_node("MessageLabel").hide()
-
-			# Start the timers and sounds
 			obstacle_timer.start()
 			engine_sound_player.play()
-			
+
 func _on_player_hit():
-	sfx_crash.play() # Add this line
-	is_game_active = false
-	obstacle_timer.stop()
+	is_game_active = false  #This stops the game logic like scrolling
+	obstacle_timer.stop()  #This stops new obstacles from spawning
 	engine_sound_player.stop()
+	sfx_crash.play()
+
+	# Add this loop to stop all active obstacles
+	for obs in active_obstacles:
+		obs.is_stopped = true
+		
 	hud.get_node("MessageLabel").text = "Game Over\nTap to Retry"
 	hud.get_node("MessageLabel").show()
-	
-	get_tree().paused = true 
 
 func _on_obstacle_timer_timeout():
 	obstacle_timer.wait_time = 10.0
@@ -128,9 +133,13 @@ func _on_obstacle_timer_timeout():
 			new_obstacle.tree_exiting.connect(func(): active_obstacles.erase(new_obstacle))
 
 func _process(delta):
-	# Keep the World node centered
+	# This part keeps the game centered if the window is resized, even on the game over screen.
 	world.position.x = (get_viewport_rect().size.x - 720) / 2
 	world.position.y = (get_viewport_rect().size.y - 1280) / 2
+
+	# If the game is not active, stop all scrolling and radar logic.
+	if not is_game_active:
+		return
 
 	# --- Road Scrolling ---
 	road1.position.y += road_speed * delta
@@ -140,25 +149,15 @@ func _process(delta):
 		road1.position.y = road2.position.y - road_height
 	if road2.position.y > 1280 + (road_height / 2):
 		road2.position.y = road1.position.y - road_height
-	
+
 	# --- Grass Scrolling Logic ---
-	# Move both grass textures down
 	grass1.position.y += road_speed * delta
 	grass2.position.y += road_speed * delta
-
-	# Check if a grass texture has moved off the bottom of the screen
 	var screen_height = 1280
-
 	if grass1.position.y > screen_height:
-		# Move it back to the top, above the other texture
 		grass1.position.y = grass2.position.y - screen_height
-		
 	if grass2.position.y > screen_height:
-		# Move it back to the top, above the other texture
 		grass2.position.y = grass1.position.y - screen_height
-	
-	if not is_game_active:
-		return
 
 	# --- Radar Beep Logic ---
 	beep_cooldown -= delta
