@@ -62,6 +62,9 @@ collision_mask = 2
 position = Vector2(360, 972)
 shape = SubResource("RectangleShape2D_1bvp3")
 
+[node name="CanvasModulate" type="CanvasModulate" parent="World"]
+color = Color(0, 0, 0, 1)
+
 [node name="HUD" parent="." instance=ExtResource("4_1bvp3")]
 process_mode = 3
 
@@ -76,7 +79,7 @@ stream = ExtResource("5_lquwl")
 bus = &"SFX"
 
 [node name="ObstacleTimer" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 2.0
 
 [node name="SfxCrash" type="AudioStreamPlayer" parent="."]
 process_mode = 3

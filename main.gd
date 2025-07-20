@@ -25,9 +25,9 @@ var active_obstacles = []
 var is_game_active = false
 var score = 0
 var beep_cooldown = 0.0
-var road_speed = 500
+var road_speed = 400
 
-const STAGGER_DISTANCE = 2200
+const STAGGER_DISTANCE = 2500
 const MAX_CONSECUTIVE_LANE = 3
 var last_safe_lane = -1
 var same_lane_count = 0
@@ -91,6 +91,7 @@ func _on_player_hit():
 	get_tree().paused = true 
 
 func _on_obstacle_timer_timeout():
+	obstacle_timer.wait_time = 10.0
 	var safe_lane = randi() % 3
 	if safe_lane == last_safe_lane:
 		same_lane_count += 1

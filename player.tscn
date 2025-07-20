@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://voiroqlgikpj"]
+[gd_scene load_steps=11 format=3 uid="uid://voiroqlgikpj"]
 
 [ext_resource type="Script" uid="uid://b4u3yrsjkkbth" path="res://player.gd" id="1_sweqy"]
 [ext_resource type="Texture2D" uid="uid://ciwgdaph2gwx0" path="res://assets/truck.png" id="2_sweqy"]
@@ -8,6 +8,24 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n7ghd"]
 size = Vector2(89, 82)
+
+[sub_resource type="Gradient" id="Gradient_sweqy"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2hs0m"]
+gradient = SubResource("Gradient_sweqy")
+fill = 1
+fill_from = Vector2(0.486339, 0.47541)
+fill_to = Vector2(0.284153, 0.262295)
+
+[sub_resource type="Gradient" id="Gradient_1jxqw"]
+colors = PackedColorArray(0.92437, 0.92437, 0.92437, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_dw050"]
+gradient = SubResource("Gradient_1jxqw")
+fill = 1
+fill_from = Vector2(0.502732, 0.502732)
+fill_to = Vector2(0.147541, 0.0983607)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 10
@@ -33,5 +51,37 @@ stream = ExtResource("4_dw050")
 
 [node name="SfxRight" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_b26j0")
+
+[node name="RearLightL" type="PointLight2D" parent="."]
+position = Vector2(-33, 46)
+scale = Vector2(-1.49729, 1.18047)
+color = Color(1, 0, 0, 1)
+texture = SubResource("GradientTexture2D_2hs0m")
+
+[node name="RearLightR" type="PointLight2D" parent="."]
+position = Vector2(27, 46)
+scale = Vector2(-1.49729, 1.18047)
+color = Color(1, 0, 0, 1)
+texture = SubResource("GradientTexture2D_2hs0m")
+
+[node name="TruckTopLightL" type="PointLight2D" parent="."]
+position = Vector2(-22, -102)
+scale = Vector2(-1.08181, 0.750411)
+texture = SubResource("GradientTexture2D_2hs0m")
+
+[node name="TruckTopLightR" type="PointLight2D" parent="."]
+position = Vector2(19, -100)
+scale = Vector2(-1.49073, 0.910773)
+texture = SubResource("GradientTexture2D_2hs0m")
+
+[node name="Ambient Light" type="PointLight2D" parent="."]
+position = Vector2(0.999992, -24)
+scale = Vector2(-11.6528, 6.1766)
+texture = SubResource("GradientTexture2D_2hs0m")
+
+[node name="Headlight" type="PointLight2D" parent="."]
+position = Vector2(-2.67029e-05, -196.264)
+scale = Vector2(16.4688, 5.148)
+texture = SubResource("GradientTexture2D_dw050")
 
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
