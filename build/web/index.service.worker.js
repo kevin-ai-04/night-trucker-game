@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1753006804|5079662907';
+const CACHE_VERSION = '1753007238|90739980';
 /** @type {string} */
 const CACHE_PREFIX = 'night-trucker-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;

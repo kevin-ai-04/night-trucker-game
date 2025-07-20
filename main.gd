@@ -64,20 +64,30 @@ func new_game():
 	obstacle_timer.stop()
 
 	hud.get_node("ScoreLabel").text = "Score: " + str(score)
-	hud.get_node("MessageLabel").text = "Press Space/Enter to Start"
+	hud.get_node("MessageLabel").text = "Press to Start"
 	hud.get_node("MessageLabel").show()
 	retry_button.hide()
 	engine_sound_player.stop()
 	
 func _unhandled_input(event):
-	if event.is_action_pressed("start_game") and not is_game_active:
-		get_tree().paused = false # Add this line
-		is_game_active = true
-		score = 0
-		hud.get_node("MessageLabel").hide()
-		hud.get_node("ScoreLabel").text = "Score: " + str(score)
-		obstacle_timer.start()
-		engine_sound_player.play()
+	# Only check for input if the game is not active
+	if not is_game_active:
+		# Check for keyboard start OR a screen tap/mouse click
+		var keyboard_start = event.is_action_pressed("start_game")
+		var screen_tap_start = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
+
+		if keyboard_start or screen_tap_start:
+			get_tree().paused = false
+			is_game_active = true
+			score = 0
+
+			# Update UI for game start
+			hud.get_node("MessageLabel").hide()
+			hud.get_node("ScoreLabel").text = "Score: " + str(score)
+
+			# Start the timers and sounds
+			obstacle_timer.start()
+			engine_sound_player.play()
 
 func _on_player_hit():
 	sfx_crash.play() # Add this line
