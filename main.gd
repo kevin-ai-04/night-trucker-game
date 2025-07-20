@@ -35,10 +35,7 @@ var same_lane_count = 0
 # Create an array of your music tracks
 var bgm_tracks = [
 	preload("res://assets/Music/going-up-chill-lofi-jazz-341261.mp3"),
-	preload("res://assets/Music/we-jazz-lofi-soul-363084.mp3"),
-	preload("res://assets/Music/sloth-tier-lofi-jazz-223593.mp3"),
 	preload("res://assets/Music/warm-breeze-lofi-music-chill-lofi-344259.mp3"),
-	preload("res://assets/Music/we-jazz-lofi-soul-363084.mp3")
 ]
 
 
