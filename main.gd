@@ -178,6 +178,7 @@ func _process(delta):
 	if obstacle_in_lane:
 		if beep_cooldown <= 0:
 			sfx_beep.play()
+			Input.vibrate_handheld(50)
 			var beep_interval = remap(closest_distance, 200, 800, 0.1, 1.0)
 			beep_cooldown = clamp(beep_interval, 0.05, 1.2)
 
