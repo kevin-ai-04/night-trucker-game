@@ -11,7 +11,6 @@ extends Node2D
 @onready var sfx_score = $SfxScore
 @onready var sfx_crash = $SfxCrash
 @onready var hud = $HUD
-@onready var retry_button = $HUD/RetryButton
 
 @onready var grass1 = $BackgroundLayer/Grass1
 @onready var grass2 = $BackgroundLayer/Grass2
@@ -46,7 +45,6 @@ var bgm_tracks = [
 func _ready():
 	player.hit.connect(_on_player_hit)
 	obstacle_timer.timeout.connect(_on_obstacle_timer_timeout)
-	retry_button.pressed.connect(new_game)
 	new_game()
 	bgm_player.finished.connect(_on_bgm_finished)
 	engine_sound_player.finished.connect(engine_sound_player.play)
@@ -66,7 +64,6 @@ func new_game():
 	hud.get_node("ScoreLabel").text = "Score: " + str(score)
 	hud.get_node("MessageLabel").text = "Press to Start"
 	hud.get_node("MessageLabel").show()
-	retry_button.hide()
 	engine_sound_player.stop()
 	
 func _unhandled_input(event):
@@ -77,26 +74,27 @@ func _unhandled_input(event):
 		var screen_tap_start = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
 
 		if keyboard_start or screen_tap_start:
+			# Call new_game() to reset score, clear old obstacles, etc.
+			new_game()
+
+			# Now, immediately start the new game
 			get_tree().paused = false
 			is_game_active = true
-			score = 0
-
-			# Update UI for game start
+			
+			# Update UI for game start (this hides the "Tap to Start" message)
 			hud.get_node("MessageLabel").hide()
-			hud.get_node("ScoreLabel").text = "Score: " + str(score)
 
 			# Start the timers and sounds
 			obstacle_timer.start()
 			engine_sound_player.play()
-
+			
 func _on_player_hit():
 	sfx_crash.play() # Add this line
 	is_game_active = false
 	obstacle_timer.stop()
 	engine_sound_player.stop()
-	hud.get_node("MessageLabel").text = "Game Over"
+	hud.get_node("MessageLabel").text = "Game Over\nTap to Retry"
 	hud.get_node("MessageLabel").show()
-	retry_button.show()
 	
 	get_tree().paused = true 
 
@@ -178,7 +176,7 @@ func _process(delta):
 	if obstacle_in_lane:
 		if beep_cooldown <= 0:
 			sfx_beep.play()
-			Input.vibrate_handheld(50)
+			Input.vibrate_handheld(150)
 			var beep_interval = remap(closest_distance, 200, 800, 0.1, 1.0)
 			beep_cooldown = clamp(beep_interval, 0.05, 1.2)
 

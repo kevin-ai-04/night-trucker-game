@@ -8,13 +8,16 @@
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -68.0
-offset_top = 48.0
-offset_right = 60.0
-offset_bottom = 91.0
+offset_left = -99.0
+offset_top = 49.0
+offset_right = 101.0
+offset_bottom = 76.0
 grow_horizontal = 2
+size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("1_37p78")
+theme_override_font_sizes/font_size = 25
 text = "Score: 0"
+horizontal_alignment = 1
 
 [node name="MessageLabel" type="Label" parent="."]
 anchors_preset = 8
@@ -29,19 +32,20 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("1_37p78")
-theme_override_font_sizes/font_size = 29
+theme_override_font_sizes/font_size = 40
 text = "Game Over"
+horizontal_alignment = 1
 
-[node name="RetryButton" type="Button" parent="."]
-anchors_preset = -1
-anchor_left = 0.497
-anchor_top = 0.552
-anchor_right = 0.497
-anchor_bottom = 0.552
-offset_left = -24.84
-offset_top = -15.5601
-offset_right = 25.16
-offset_bottom = 15.4399
-grow_horizontal = 2
-grow_vertical = 2
-text = "Retry"
+[node name="VersionLabel" type="Label" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -115.0
+offset_top = -38.0
+offset_right = -20.0
+offset_bottom = -15.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "v25.07.20.01"
