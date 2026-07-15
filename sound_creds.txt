@@ -1,9 +1,18 @@
-Creds
+Credits and asset licenses
 
-Music by jumpingbunny from Pixabay
-Music by Chaowarin Phuttarat from Pixabay
-Music by snoozybeats from Pixabay
-Music by Lazy Chill Zone from Pixabay
+Music
 
+- "going up [chill lofi jazz]" by snoozybeats
+  https://pixabay.com/music/beats-going-up-chill-lofi-jazz-341261/
+- "Warm Breeze - Lofi Music [chill lofi]" by snoozybeats
+  https://pixabay.com/music/beats-warm-breeze-lofi-music-chill-lofi-344259/
 
-Rumbling Semi Truck posted by Evan on White Noise Market
+Both tracks are listed under the Pixabay Content License:
+https://pixabay.com/service/license-summary/
+
+Lane announcements
+
+- Kendra synthetic voice generated with Amazon Polly.
+  https://docs.aws.amazon.com/polly/latest/dg/available-voices.html
+- Amazon states that Polly output may be stored and reused.
+  https://aws.amazon.com/polly/faqs/

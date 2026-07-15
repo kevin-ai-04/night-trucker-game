@@ -18,8 +18,6 @@ extends Node2D
 @onready var bgm_player = $BGMPlayer
 var current_bgm_index = -1
 
-@onready var engine_sound_player = $EngineSoundPlayer
-
 var active_obstacles = []
 var is_game_active = false
 var score = 0
@@ -44,7 +42,6 @@ func _ready():
 	obstacle_timer.timeout.connect(_on_obstacle_timer_timeout)
 	new_game()
 	bgm_player.finished.connect(_on_bgm_finished)
-	engine_sound_player.finished.connect(engine_sound_player.play)
 	_play_next_song()
 
 func new_game():
@@ -57,8 +54,6 @@ func new_game():
 	active_obstacles.clear()
 
 	obstacle_timer.stop()
-	engine_sound_player.stop()
-
 	# Reset positions
 	player.reset()
 	road1.position = Vector2(360, 640)
@@ -85,12 +80,10 @@ func _unhandled_input(event):
 			is_game_active = true
 			hud.get_node("MessageLabel").hide()
 			obstacle_timer.start()
-			engine_sound_player.play()
 
 func _on_player_hit():
 	is_game_active = false  #This stops the game logic like scrolling
 	obstacle_timer.stop()  #This stops new obstacles from spawning
-	engine_sound_player.stop()
 	sfx_crash.play()
 
 	# Add this loop to stop all active obstacles

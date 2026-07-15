@@ -1,3 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Godot sidecars for README-only images
+/images/*.import
+
+# Temporary Godot scene saves
+*.tscn*.tmp
